@@ -26,7 +26,7 @@
           <li><a href="" class="">Active</a></li>
           <li><a href="" class="">Completed</a></li>
       </ul>
-      <button class="clear-completed">
+      <button @click="ClearCompleted()" class="clear-completed">
           Clear completed
       </button>
     </footer>
@@ -60,6 +60,10 @@ export default {
 
     ToggleAll() {
       this.todoList.map(e => e.completed = ! this.toggleAll);
+    },
+
+    ClearCompleted() {
+      this.todoList = this.todoList.filter(e => e.completed !== true)
     }
   },
   computed: {
