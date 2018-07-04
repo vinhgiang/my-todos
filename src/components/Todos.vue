@@ -5,7 +5,7 @@
         <input v-model="taskName" @keypress.enter="AddTodoItem()" autofocus="autofocus" autocomplete="off" placeholder="What needs to be done?" class="new-todo">
       </header>
       <section class="main">
-        <input type="checkbox" class="toggle-all">
+        <input @click="ToggleAll()" v-model="toggleAll" type="checkbox" class="toggle-all">
         <ul class="todo-list">
             <li v-for="(item, index) in todoList" :key="index" :class="item.completed ? 'todo completed' : 'todo' ">
                 <div class="view">
@@ -38,8 +38,9 @@ export default {
   name: 'Todos',
   data () {
     return {
-      taskName: '',
       title: 'My Todos',
+      taskName: '',
+      toggleAll: false,
       todoList: []
     }
   },
@@ -56,6 +57,10 @@ export default {
     RemoveTodoItem(index) {
       this.todoList.splice(index, 1);
     },
+
+    ToggleAll() {
+      this.todoList.map(e => e.completed = ! this.toggleAll);
+    }
   },
   computed: {
     getTotalIncompleteItem() {
