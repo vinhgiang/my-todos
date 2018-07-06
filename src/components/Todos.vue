@@ -11,7 +11,7 @@
                 <div class="view">
                     <input v-model="item.completed" type="checkbox" :checked="item.completed" class="toggle">
                     <label>{{ item.name }}</label>
-                    <button @click="RemoveTodoItem(index)" class="destroy"></button>
+                    <button @click="RemoveTodoItem(item.name)" class="destroy"></button>
                 </div>
             </li>
         </ul>
@@ -46,6 +46,9 @@ export default {
   },
   methods: {
     AddTodoItem() {
+      if (this.todoList.findIndex(e => e.name === this.taskName) >= 0) {
+        return alert(this.taskName + ' is existing in your list.');
+      }
       this.todoList.push({
         name: this.taskName,
         completed: false
@@ -54,7 +57,8 @@ export default {
       this.taskName = '';
     },
 
-    RemoveTodoItem(index) {
+    RemoveTodoItem(taskName) {
+      let index = this.todoList.findIndex(e => e.name === taskName)
       this.todoList.splice(index, 1);
     },
 
