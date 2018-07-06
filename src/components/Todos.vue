@@ -7,13 +7,12 @@
       <section class="main">
         <input @click="ToggleAll()" v-model="toggleAll" type="checkbox" class="toggle-all">
         <ul class="todo-list">
-            <li v-for="(item, index) in todoList" :key="index" :class="item.completed ? 'todo completed' : 'todo' ">
+            <li v-for="(item, index) in getItemList" :key="index" :class="item.completed ? 'todo completed' : 'todo' ">
                 <div class="view">
                     <input v-model="item.completed" type="checkbox" :checked="item.completed" class="toggle">
                     <label>{{ item.name }}</label>
                     <button @click="RemoveTodoItem(index)" class="destroy"></button>
                 </div>
-                <input type="text" class="edit">
             </li>
         </ul>
     </section>
@@ -22,9 +21,9 @@
           <strong>{{ getTotalIncompleteItem }}</strong> item left
       </span>
       <ul class="filters">
-          <li><a href="" class="selected">All</a></li>
-          <li><a href="" class="">Active</a></li>
-          <li><a href="" class="">Completed</a></li>
+          <li><a href="" @click="showAll($event)" :class="this.status == 'all' ? 'selected' : ''">All</a></li>
+          <li><a href="" @click="showActive($event)" :class="this.status == 'active' ? 'selected' : ''">Active</a></li>
+          <li><a href="" @click="ShowCompleted($event)" :class="this.status == 'completed' ? 'selected' : ''">Completed</a></li>
       </ul>
       <button @click="ClearCompleted()" class="clear-completed">
           Clear completed
@@ -41,7 +40,8 @@ export default {
       title: 'My Todos',
       taskName: '',
       toggleAll: false,
-      todoList: []
+      todoList: [],
+      status: 'all'
     }
   },
   methods: {
@@ -63,7 +63,22 @@ export default {
     },
 
     ClearCompleted() {
-      this.todoList = this.todoList.filter(e => e.completed !== true)
+      this.todoList = this.todoList.filter(e => e.completed !== true);
+    },
+
+    ShowCompleted(e) {
+      this.status = 'completed';
+      e.preventDefault();
+    },
+
+    showActive(e) {
+      this.status = 'active';
+      e.preventDefault();
+    },
+
+    showAll(e) {
+      this.status = 'all'
+      e.preventDefault();
     }
   },
   computed: {
@@ -75,6 +90,16 @@ export default {
         }
       }
       return totalIncompleteItem;
+    },
+
+    getItemList() {
+      let items = this.todoList;
+      if(this.status === 'active') {
+        return items.filter(e => e.completed === false)
+      } else if (this.status === 'completed') {
+        return items.filter(e => e.completed === true)
+      }
+      return items;
     }
   }
 }
